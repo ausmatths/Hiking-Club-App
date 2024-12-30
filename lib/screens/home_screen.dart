@@ -1,7 +1,36 @@
 import 'package:flutter/material.dart';
+import '../widgets/notification_bell.dart';
+import '../models/notification.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<HikingNotification> _notifications = [
+    HikingNotification(
+      id: '1',
+      title: 'New Trail Added',
+      message: 'Check out the new Mountain Peak trail!',
+      timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+    ),
+    HikingNotification(
+      id: '2',
+      title: 'Upcoming Event',
+      message: 'Group hike this weekend!',
+      timestamp: DateTime.now().subtract(const Duration(hours: 1)),
+    ),
+  ];
+
+  void _handleNotificationRead(String notificationId) {
+    setState(() {
+      final notification = _notifications.firstWhere((n) => n.id == notificationId);
+      notification.isRead = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,11 +38,9 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Hiking Club'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {
-              // TODO: Implement notifications
-            },
+          NotificationBell(
+            notifications: _notifications,
+            onNotificationRead: _handleNotificationRead,
           ),
         ],
       ),
